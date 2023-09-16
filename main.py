@@ -50,6 +50,7 @@ def githubWebhookHandler():
 
   return jsonify({'message': 'OK'})
 
+# 
 @client.event
 async def on_ready():
   print(f'Bot connectado como {client.user.name}')
