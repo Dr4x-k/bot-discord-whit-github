@@ -17,6 +17,10 @@ client = commands.Bot(command_prefix='$', intents=intents)
 
 app = Flask(__name__)
 
+@app.route('/')
+def index():
+  return "Servidor funcionando"
+
 @app.route('/github-webhook', methods=['POST'])
 def githubWebhookHandler():
   data = request.get_json()
