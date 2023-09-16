@@ -4,6 +4,9 @@ import discord
 from discord.ext import commands
 from flask import Flask, request, jsonify
 import asyncio
+from dotenv import load_dotenv
+
+load_dotenv()
 
 secret = os.environ['token']
 channel_id = os.environ['channel']
