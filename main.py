@@ -8,8 +8,10 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+#  Variables de entorno
 secret = os.environ['token']
 channel_id = os.environ['channel']
+
 intents = discord.Intents.default()
 # intents.message_content = True
 
@@ -17,10 +19,12 @@ client = commands.Bot(command_prefix='$', intents=intents)
 
 app = Flask(__name__)
 
+#  Ruta de inicio
 @app.route('/')
 def index():
   return "Servidor funcionando"
 
+# Ruta que recibe  el post del webhook
 @app.route('/github-webhook', methods=['POST'])
 def githubWebhookHandler():
   data = request.get_json()
@@ -51,9 +55,11 @@ def githubWebhookHandler():
 async def on_ready():
   print(f'Bot connectado como {client.user.name}')
 
+# Método de ejecución del bot de discord
 async def start_bot():
   await client.start(secret)
 
+# Método de ejecución de servidor flask
 def start_server():
   app.run(host='0.0.0.0', port=5000)
 
