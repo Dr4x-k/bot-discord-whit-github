@@ -3,9 +3,9 @@ import discord
 from discord.ext import commands
 from flask import Flask, request, jsonify
 import asyncio
-from dotenv import load_dotenv
+# from dotenv import load_dotenv
 
-load_dotenv()
+# load_dotenv()
 
 #  Variables de entorno
 secret = os.environ['token']
@@ -32,7 +32,7 @@ def githubWebhookHandler():
     event_type = request.headers['X-GitHub-Event']
 
     if event_type == 'push':
-      channel = client.get_channel(channel_id)
+      channel = client.get_channel(int(channel_id))
       if channel:
         pusher_name = data.get("pusher", {}).get("name")
         repository_name = data.get("repository", {}).get("name")
@@ -50,7 +50,6 @@ def githubWebhookHandler():
 
   return jsonify({'message': 'OK'})
 
-# 
 @client.event
 async def on_ready():
   print(f'Bot connectado como {client.user.name}')
