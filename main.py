@@ -33,7 +33,8 @@ def githubWebhookHandler():
 
     if event_type == 'push':
       channel = client.get_channel(int(channel_id))
-      if channel:
+      # if channel:
+      if channel == os.environ['channel_didactik']:
         pusher_name = data.get("pusher", {}).get("name")
         repository_name = data.get("repository", {}).get("name")
 
@@ -68,5 +69,3 @@ server_task = loop.run_in_executor(None, start_server)
 
 # Ejecutar ambas tareas en paralelo
 loop.run_until_complete(asyncio.gather(bot_task, server_task))
-
-# Esto es una prueba para el bot #
