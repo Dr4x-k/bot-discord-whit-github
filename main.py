@@ -27,27 +27,26 @@ def index():
 @app.route('/github-webhook', methods=['POST'])
 def githubWebhookHandler():
   data = request.get_json()
+  if data.get("repository", {}).get("name") == "bot-discord-with-github" or data.get("repository", {}).get("name") == "DIDACTI-K":
+    if 'X-GitHub-Event' in request.headers:
+      event_type = request.headers['X-GitHub-Event']
 
-  if 'X-GitHub-Event' in request.headers:
-    event_type = request.headers['X-GitHub-Event']
+      if event_type == 'push':
+        channel = client.get_channel(int(channel_id))
+        if channel:
+          pusher_name = data.get("pusher", {}).get("name")
+          repository_name = data.get("repository", {}).get("name")
 
-    if event_type == 'push':
-      channel = client.get_channel(int(channel_id))
-      # if channel:
-      if channel == os.environ['channel_didactik']:
-        pusher_name = data.get("pusher", {}).get("name")
-        repository_name = data.get("repository", {}).get("name")
+          commits = data.get("commits", [])
 
-        commits = data.get("commits", [])
+          message = f"Se ha realizado un push en repositorio **{repository_name}** por **{pusher_name}**.\n\n{'Commits:' if len(commits) > 1 else 'commit:'}\n"
 
-        message = f"Se ha realizado un push en repositorio **{repository_name}** por **{pusher_name}**.\n\n{'Commits:' if len(commits) > 1 else 'commit:'}\n"
+          for commit in commits:
+            commit_message = commit.get("message")
+            message += f"-> {commit_message}\n"
 
-        for commit in commits:
-          commit_message = commit.get("message")
-          message += f"-> {commit_message}\n"
-
-        print(f'Se ha realizado un push en GitHub.')
-        client.loop.create_task(channel.send(message))
+          print(f'Se ha realizado un push en GitHub.')
+          client.loop.create_task(channel.send(message))
 
   return jsonify({'message': 'OK'})
 
