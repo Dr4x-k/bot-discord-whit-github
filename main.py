@@ -89,5 +89,3 @@ server_task = loop.run_in_executor(None, start_server)
 
 # Ejecutar ambas tareas en paralelo
 loop.run_until_complete(asyncio.gather(bot_task, server_task))
-
-# Comentario solo para hacer prueba de funcionalidad
