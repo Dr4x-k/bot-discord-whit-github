@@ -28,6 +28,7 @@ def index():
 def githubWebhookHandler():
   data = request.get_json()
   if data.get("repository", {}).get("name") == "bot-discord-with-github" or data.get("repository", {}).get("name") == "DIDACTI-K":
+    print("Se ejecutó con el filtro de repositorio")
     if 'X-GitHub-Event' in request.headers:
       event_type = request.headers['X-GitHub-Event']
 
@@ -47,7 +48,27 @@ def githubWebhookHandler():
 
           print(f'Se ha realizado un push en GitHub.')
           client.loop.create_task(channel.send(message))
+  else:
+    print("Se ejecutó sin el filtro de repositorio")
+    if 'X-GitHub-Event' in request.headers:
+      event_type = request.headers['X-GitHub-Event']
 
+      if event_type == 'push':
+        channel = client.get_channel(int(channel_id))
+        if channel:
+          pusher_name = data.get("pusher", {}).get("name")
+          repository_name = data.get("repository", {}).get("name")
+
+          commits = data.get("commits", [])
+
+          message = f"Se ha realizado un push en repositorio **{repository_name}** por **{pusher_name}**.\n\n{'Commits:' if len(commits) > 1 else 'commit:'}\n"
+
+          for commit in commits:
+            commit_message = commit.get("message")
+            message += f"-> {commit_message}\n"
+
+          print(f'Se ha realizado un push en GitHub.')
+          client.loop.create_task(channel.send(message))
   return jsonify({'message': 'OK'})
 
 @client.event
@@ -68,3 +89,5 @@ server_task = loop.run_in_executor(None, start_server)
 
 # Ejecutar ambas tareas en paralelo
 loop.run_until_complete(asyncio.gather(bot_task, server_task))
+
+# Comentario solo para hacer prueba de funcionalidad
