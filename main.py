@@ -61,7 +61,7 @@ def githubWebhookHandler():
 
           commits = data.get("commits", [])
 
-          message = f"Se ha realizado un push en repositorio **{repository_name}** por **{pusher_name}**.\n\n{'Commits:' if len(commits) > 1 else 'commit:'}\n"
+          message = f"*-- @everyone --*\nSe ha realizado un push en repositorio **{repository_name}** por **{pusher_name}**.\n\n{'Commits:' if len(commits) > 1 else 'commit:'}\n"
 
           for commit in commits:
             commit_message = commit.get("message")
